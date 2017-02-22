@@ -4,21 +4,33 @@ import javax.transaction.Transactional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
+import org.springframework.validation.BindingResult;
+import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.servlet.ModelAndView;
 
-import br.com.softplan.projeto.dao.UsuarioDao;
-import br.com.softplan.projeto.domain.Usuario;
+import br.com.softplan.projeto.domain.User;
+import br.com.softplan.projeto.service.SecurityService;
+import br.com.softplan.projeto.service.UserService;
+import br.com.softplan.projeto.validator.UserValidator;
 
 @Controller
 @Transactional
-@RequestMapping("/usuarios")
+//@RequestMapping("/usuarios")
 public class UsuarioController
 {
-	
+	@Autowired
+    private UserService userService;
+
     @Autowired
-    private UsuarioDao usuarioDao;
+    private SecurityService securityService;
+
+    @Autowired
+    private UserValidator userValidator;
+
+
 
    @RequestMapping("/usuario")
    public ModelAndView index()
@@ -29,39 +41,30 @@ public class UsuarioController
       return modelAndView;
    }
    
+   @RequestMapping(value = "/novo-usuario", method = RequestMethod.GET)
+   public String registration(Model model) {
+       model.addAttribute("userForm", new User());
+
+       return "usuario/newUser";
+   }
+   
    @RequestMapping(value="/novo-usuario", method=RequestMethod.POST)
-   public ModelAndView cadastrarUsuario(Usuario usuario)
-   {
-	   	  	   
-	  usuarioDao.create(usuario); 
-	   
-	   ModelAndView modelAndView = new ModelAndView("usuario/index");	  
-	   return modelAndView;
+   public String registration(@ModelAttribute("userForm") User userForm, BindingResult bindingResult, Model model) {
+       userValidator.validate(userForm, bindingResult);
+      
+       if (bindingResult.hasErrors()) {
+    	   System.out.println("Error ao cadastrar novo usuário");
+           return "usuario/newUser";
+       }
+       userService.save(userForm);
+
+       securityService.autologin(userForm.getUsername(), userForm.getConfirmPassword());
+
+       return "redirect:/home";
    }
    
-   @RequestMapping("/editar-usuario")
-   public ModelAndView editarUsuario()
-   {
-	   	   
-	   ModelAndView modelAndView = new ModelAndView("usuario/editar");
-	   return modelAndView;
-   }
-   
-   @RequestMapping(value="/atualizar-usuario", method=RequestMethod.POST)
-   public String atualizarUsuario(Usuario usuario)
-   {
-	    
-	  
-	   return "usuario/index";
-   }
+ 
    
   
-   @RequestMapping(value="/deletar-usuario", method=RequestMethod.DELETE)
-   public ModelAndView deletarUsuario()
-   {
-	   	   
-	   ModelAndView modelAndView = new ModelAndView("usuario/index");
-	   return modelAndView;
-   }
    
 }

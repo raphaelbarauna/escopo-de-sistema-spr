@@ -1,7 +1,10 @@
 <!DOCTYPE html>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
 <%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt"%>
+<%@ taglib prefix="s" uri="http://tiles.apache.org/tags-tiles" %>
+<%@ taglib prefix="spring" uri="http://www.springframework.org/tags" %>
 
+<c:set var="contextPath" value="${pageContext.request.contextPath}"/>
 <html>
 
 <head>
@@ -35,14 +38,13 @@
                             <img alt="image" class="img-circle" src="theme/assets/img/profile_small.jpg" />
                              </span>
                             <a data-toggle="dropdown" class="dropdown-toggle" href="#">
-                            <span class="clear"> <span class="block m-t-xs"> <strong class="font-bold">David Williams</strong>
+                            <span class="clear"> <span class="block m-t-xs"> <strong class="font-bold">${pageContext.request.userPrincipal.name}</strong>
                              </span> <span class="text-muted text-xs block">Art Director <b class="caret"></b></span> </span> </a>
                             <ul class="dropdown-menu animated fadeInRight m-t-xs">
                                 <li><a href="profile.html">Profile</a></li>
                                 <li><a href="contacts.html">Contacts</a></li>
                                 <li><a href="mailbox.html">Mailbox</a></li>
-                                <li class="divider"></li>
-                                <li><a href="login.html">Logout</a></li>
+                                <li class="divider"></li>  
                             </ul>
                         </div>
                         <div class="logo-element">
@@ -126,17 +128,20 @@
 
 
                 <li>
-                    <a href="login.html">
+                 <c:if test="${pageContext.request.userPrincipal.name != null}">
+                         <form id="logoutForm" method="POST" action="${contextPath}/logout">
+            			<input type="hidden" name="${_csrf.parameterName}" value="${_csrf.token}"/>
+        				</form>
+                    <a onclick="document.forms['logoutForm'].submit()">
                         <i class="fa fa-sign-out"></i> Log out
                     </a>
+                    </c:if>
                 </li>
             </ul>
 
         </nav>
         </div>
                 <div class="row  border-bottom white-bg dashboard-header">
-                <div class="container" id="content">
-                TEHUSHDUHSAHUDasduhs
                 </div>
             </div>
            
@@ -157,7 +162,6 @@
         </div>
 
         </div>
-    </div>
 
     <!-- Mainly scripts -->
     <script src="theme/assets/js/jquery-2.1.1.js"></script>

@@ -5,16 +5,16 @@ import org.springframework.data.repository.CrudRepository;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import br.com.softplan.projeto.domain.Usuario;
+import br.com.softplan.projeto.domain.User;
 
 
 @Transactional
-public interface UsuarioRepository extends JpaRepository<Usuario, Integer>{
+public interface UserRepository extends JpaRepository<User, Integer>{
 	
 	
 	
-	 public Usuario findByNome(String nome);
+	 User findByUsername(String username);
+	
 	 
-	 public Usuario findByCodUsuario(Integer codUsuario);
 	
 }

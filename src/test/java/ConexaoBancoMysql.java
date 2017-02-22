@@ -14,8 +14,8 @@ import org.springframework.boot.test.SpringApplicationConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
 import br.com.softplan.projeto.Boot;
-import br.com.softplan.projeto.domain.Usuario;
-import br.com.softplan.projeto.repositories.UsuarioRepository;
+import br.com.softplan.projeto.domain.User;
+import br.com.softplan.projeto.repositories.UserRepository;
 
 
 @RunWith(SpringJUnit4ClassRunner.class)
@@ -24,7 +24,7 @@ public class ConexaoBancoMysql
 {
 	
 	@Autowired
-	private UsuarioRepository usuarioRepository;
+	private UserRepository usuarioRepository;
 
 
   
@@ -34,15 +34,15 @@ public void main2()
 	try
 	  {  
 	
-  	Usuario user = new Usuario();  
+  	User user = new User();  
   	
-    user.setNome("Raphael");
+    user.setUsername("Raphael");
     user.setEmail("Rafael_barauna@hotmail.com");
-    user.setSenha("teste");
+    user.setPassword("teste");
     user.setTelefone("33744400");
     
     Date data = new Date();
-    user.setAniversario(data);
+    user.setBirthday(data);
     System.out.println(user);  
     
     this.usuarioRepository.save(user);
